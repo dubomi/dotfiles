@@ -1,0 +1,30 @@
+# ==============================================================================
+# LazyGit Configuration (~/.config/lazygit/config.yml)
+# ==============================================================================
+os:
+  # Uses Neovim as default editor with native line jumping & buffer support
+  editPreset: 'nvim'
+gui:
+  # Catppuccin-style dark theme overrides (soft dark gray selection instead of bright blue)
+  theme:
+    activeBorderColor:
+      - '#d28bff' # Mauve border for active panel
+      - 'bold'
+    inactiveBorderColor:
+      - '#585b70' # Surface gray for unfocused panels
+    selectedLineBgColor:
+      - '#313244' # Surface0 background for selected line (retains high-contrast red/green text)
+    selectedRangeBgColor:
+      - '#313244' # Surface0 background for selected range in diff view
+    cherryPickedCommitBgColor:
+      - '#45475a'
+    cherryPickedCommitFgColor:
+      - '#d28bff'
+  # Display settings
+  showIcons: true
+  showFileTree: true # Tree hierarchy view in files panel
+  showCommandLog: false # Keeps UI clean by hiding raw git command logs
+  mainPanelSplitMode: 'flexible' # Dynamic side-by-side or stacked diff view based on window size
+git:
+  paging:
+    colorArg: 'always'

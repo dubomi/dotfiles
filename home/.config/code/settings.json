@@ -1,0 +1,10 @@
+{
+  "claudeCode.preferredLocation": "panel",
+  "workbench.colorTheme": "Visual Studio Dark",
+  "explorer.confirmDelete": false,
+  "editor.minimap.enabled": false,
+  "github.copilot.nextEditSuggestions.eagerness": "low",
+  "git.autofetch": true,
+  "aws.telemetry": false,
+  "update.mode": "none"
+}

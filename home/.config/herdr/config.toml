@@ -1,0 +1,8 @@
+[keys]
+prefix = "ctrl+b"
+split_horizontal = "prefix+s"
+settings = "prefix+shift+s" # Rebind settings so it doesn't conflict
+
+[ui]
+# Agents panel order: explicit choice of "spaces" (grouped by space, the default) over "priority".
+agent_panel_sort = "spaces"
