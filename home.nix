@@ -3,7 +3,8 @@
 # ==============================================================================
 # Description:
 #   User-level configuration module for managing dotfiles, application settings,
-#   CLI utilities, and home directory symlinks on macOS via nix-darwin and Home Manager.
+#   CLI utilities, and home directory symlinks via Home Manager. Shared between
+#   macOS (nix-darwin) and NixOS/Linux.
 #
 # Reference Documentation & Search:
 #   - Configuration Options: https://nix-community.github.io/home-manager/options.xhtml
@@ -11,6 +12,7 @@
 # ==============================================================================
 {
   config,
+  lib,
   pkgs,
   user,
   ...
@@ -18,7 +20,10 @@
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
 in {
   home.username = user;
-  home.homeDirectory = "/Users/${user}";
+  home.homeDirectory =
+    if pkgs.stdenv.isDarwin
+    then "/Users/${user}"
+    else "/home/${user}";
   home.stateVersion = "26.05";
   home.packages = with pkgs; [
     # cli tools
@@ -204,5 +209,6 @@ in {
   home.file.".claude/claude.md".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
   home.file.".codex/agents.md".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
   home.file.".config/opencode/agents.md".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
-  home.file."Library/Application Support/Code/User/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/code/settings.json";
+  home.file."Library/Application Support/Code/User/settings.json".source = lib.mkIf pkgs.stdenv.isDarwin (config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/code/settings.json");
+  home.file.".config/Code/User/settings.json".source = lib.mkIf pkgs.stdenv.isLinux (config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/code/settings.json");
 }
