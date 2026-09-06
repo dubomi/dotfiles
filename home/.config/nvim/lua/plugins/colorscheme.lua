@@ -35,6 +35,10 @@ return {
         return {
           -- 1. LINE NUMBERS (Higher contrast grays/whites)
           LineNr = { fg = colors.overlay2 }, -- #9399b2 (brighter gray than surface2)
+
+          -- 2. NEO-TREE: don't dim dotfiles/gitignored items, match normal file color
+          NeoTreeDotfile = { fg = colors.text },
+          NeoTreeGitIgnored = { fg = colors.text },
         }
       end,
     })

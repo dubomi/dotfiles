@@ -26,5 +26,6 @@ gui:
   showCommandLog: false # Keeps UI clean by hiding raw git command logs
   mainPanelSplitMode: 'flexible' # Dynamic side-by-side or stacked diff view based on window size
 git:
-  paging:
-    colorArg: 'always'
+  pagers:
+    - colorArg: 'always'
+      pager: delta --dark --paging=never

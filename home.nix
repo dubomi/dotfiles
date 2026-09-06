@@ -12,40 +12,46 @@
 # ==============================================================================
 {
   config,
-  lib,
   pkgs,
   user,
+  herdr-nix,
   ...
 }: let
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
 in {
   home.username = user;
-  home.homeDirectory =
-    if pkgs.stdenv.isDarwin
-    then "/Users/${user}"
-    else "/home/${user}";
   home.stateVersion = "26.05";
-  home.packages = with pkgs; [
-    # cli tools
-    ripgrep # fast search
-    fd # fast find
-    fzf # fuzzy finder
-    lazygit
-    neovim
-    nerd-fonts.hack # the font
+  home.packages =
+    (with pkgs; [
+      # cli tools
+      ripgrep # fast search
+      fd # fast find
+      fzf # fuzzy finder
+      lazygit
+      delta
+      claude-code
+      wezterm # terminal emulator; home-manager's targets.darwin.copyApps (already
+              # on via home.stateVersion) makes this show up correctly in
+              # Spotlight/Dock/Launchpad on macOS
+      neovim
+      nerd-fonts.hack # the font
 
-    # nvim language tooling
-    tree-sitter # parser compiler CLI (required by nvim-treesitter main branch)
-    lua-language-server # lua LSP
-    nixd # nix LSP
-    marksman # markdown LSP
-    stylua # lua code formatter
-    alejandra # nix code formatter
-    jq # JSON processor/formatter
-    yamlfmt # YAML formatter
-    vscode-langservers-extracted #json, html, css, ESLint language language servers
-    terraform-ls #terraform formatter
-  ];
+      # nvim language tooling
+      tree-sitter # parser compiler CLI (required by nvim-treesitter main branch)
+      lua-language-server # lua LSP
+      nixd # nix LSP
+      marksman # markdown LSP
+      stylua # lua code formatter
+      alejandra # nix code formatter
+      jq # JSON processor/formatter
+      yamlfmt # YAML formatter
+      vscode-langservers-extracted #json, html, css, ESLint language language servers
+      terraform-ls #terraform formatter
+    ])
+    # herdr isn't in nixpkgs proper yet, so it can't just go in the list
+    # above -- it comes from the herdr-nix flake input instead (see flake.nix),
+    # which wraps herdr's official prebuilt per-platform release binaries.
+    ++ [herdr-nix.packages.${pkgs.system}.default];
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
 
@@ -200,15 +206,13 @@ in {
 
   # Edit-in-place: the real file stays in my repo, ~/.config just points at it.
   # Without symlinks, I'd need to rebuild the environment for configs to be generated
+  home.file.".gitconfig".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.gitconfig";
   home.file.".config/wezterm".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/wezterm";
   home.file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/nvim";
   home.file.".config/herdr".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/herdr";
   home.file.".config/stylua.toml".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/.stylua.toml";
-  home.file.".config/lazygit/config.yml".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/lazygit/config.yml";
   home.file.".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/settings.json";
   home.file.".claude/claude.md".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
   home.file.".codex/agents.md".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
   home.file.".config/opencode/agents.md".source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
-  home.file."Library/Application Support/Code/User/settings.json".source = lib.mkIf pkgs.stdenv.isDarwin (config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/code/settings.json");
-  home.file.".config/Code/User/settings.json".source = lib.mkIf pkgs.stdenv.isLinux (config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/code/settings.json");
 }

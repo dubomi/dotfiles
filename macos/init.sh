@@ -15,7 +15,7 @@ if [ "$EUID" -eq 0 ]; then
 fi
 
 HOME="${HOME:-/Users/$(whoami)}"
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 
 echo "<<<<< Installing Determinate Nix >>>>>"
 if command -v nix >/dev/null 2>&1; then
@@ -76,15 +76,15 @@ echo "<<<<< Run the nix build >>>>>"
 #    we don't have darwin-rebuild on the machine yet. The following command is pulling down the executable on the fly.
 #    
 #    NIX_BIN="$(command -v nix)"
-#    sudo "$NIX_BIN" run github:nix-darwin/nix-darwin/nix-darwin-26.05#darwin-rebuild -- switch --flake ~/.dotfiles#mac
-# 
+#    sudo "$NIX_BIN" run github:nix-darwin/nix-darwin/nix-darwin-26.05#darwin-rebuild -- switch --flake ~/.dotfiles/macos#mac
+#
 # 2. nix build
 #    darwin-rebuild calls nix build anyway so we'll use this as it's more intuitive here, but from now on (./build.sh)
 #    the setup will utilize darwin-rebuild
 
 
 # nix build
-nix build ~/.dotfiles#darwinConfigurations.mac.system
-sudo ./result/sw/bin/darwin-rebuild switch --flake ~/.dotfiles#mac
+nix build ~/.dotfiles/macos#darwinConfigurations.mac.system
+sudo ./result/sw/bin/darwin-rebuild switch --flake ~/.dotfiles/macos#mac
 
 echo "<<<<< Initial setup done. From now on, use ./build.sh to apply changes. >>>>>"

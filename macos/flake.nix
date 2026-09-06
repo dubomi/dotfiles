@@ -19,6 +19,10 @@
 
     # nix-homebrew
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    # herdr isn't in nixpkgs proper yet; this flake wraps its official
+    # prebuilt per-platform release binaries.
+    herdr-nix.url = "github:herdrdev/herdr-nix";
   };
 
   outputs = inputs @ {
@@ -27,8 +31,9 @@
     nix-darwin,
     home-manager,
     nix-homebrew,
+    herdr-nix,
   }: let
-    user = import ./user.nix;
+    user = import ../user.nix;
   in {
     darwinConfigurations."mac" = nix-darwin.lib.darwinSystem {
       specialArgs = {inherit user;};
@@ -40,8 +45,10 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = {inherit user;};
-          home-manager.users.${user} = import ./home.nix;
+          home-manager.extraSpecialArgs = {inherit user herdr-nix;};
+          home-manager.users.${user} = {
+            imports = [../home.nix ./home.nix];
+          };
         }
       ];
     };
