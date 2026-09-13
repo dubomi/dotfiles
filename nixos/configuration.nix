@@ -41,7 +41,7 @@
 
   environment.systemPackages = with pkgs; [vim wget git google-chrome];
 
-  time.timeZone = "America/Los_Angeles"; # TODO: confirm
+  time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
   system.stateVersion = "26.05";
