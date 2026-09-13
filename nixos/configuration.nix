@@ -39,7 +39,7 @@
   services.displayManager.gdm.autoSuspend = false; # prevents sleep at the terminal
   services.desktopManager.plasma6.enable = true;
 
-  environment.systemPackages = with pkgs; [vim wget git];
+  environment.systemPackages = with pkgs; [vim wget git google-chrome];
 
   time.timeZone = "America/Los_Angeles"; # TODO: confirm
   i18n.defaultLocale = "en_US.UTF-8";
