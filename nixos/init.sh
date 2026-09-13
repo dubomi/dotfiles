@@ -64,7 +64,7 @@ echo "<<<<< Run the initial switch >>>>>"
 # them on permanently, but that setting isn't active until AFTER this first
 # switch succeeds -- so bootstrap it here with a one-off CLI flag instead.
 sudo nixos-rebuild switch \
-  --extra-experimental-features "nix-command flakes" \
+  --option extra-experimental-features "nix-command flakes" \
   --flake "$HOME/.dotfiles/nixos#$HOST"
 
 echo "<<<<< Initial setup done. From now on, use ./build.sh $HOST to apply changes. >>>>>"
