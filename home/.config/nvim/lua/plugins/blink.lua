@@ -7,6 +7,7 @@
 return {
   {
     "saghen/blink.cmp",
+    dependencies = { "giuxtaposition/blink-cmp-copilot" },
     version = "1.*", -- track the v1 release line
     event = "InsertEnter", -- load the first time you start typing
     opts = {
@@ -42,10 +43,16 @@ return {
       },
 
       sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
+        default = { "lsp", "path", "snippets", "buffer", "copilot" },
         providers = {
           lsp = { score_offset = 100 },
           snippets = { score_offset = 80 },
+          copilot = {
+            name = "copilot",
+            module = "blink-cmp-copilot",
+            score_offset = 50,
+            async = true,
+          },
         },
       },
     },
