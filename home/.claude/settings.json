@@ -1,10 +1,13 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "defaultMode": "auto"
   },
   "theme": "auto",
-  "attribution": {
-    "commit": "",
-    "pr": ""
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true
   }
 }

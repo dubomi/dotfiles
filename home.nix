@@ -31,8 +31,8 @@ in {
       delta
       claude-code
       wezterm # terminal emulator; home-manager's targets.darwin.copyApps (already
-              # on via home.stateVersion) makes this show up correctly in
-              # Spotlight/Dock/Launchpad on macOS
+      # on via home.stateVersion) makes this show up correctly in
+      # Spotlight/Dock/Launchpad on macOS
       neovim
       nerd-fonts.hack # the font
 
@@ -47,14 +47,17 @@ in {
       yamlfmt # YAML formatter
       vscode-langservers-extracted #json, html, css, ESLint language language servers
       terraform-ls #terraform formatter
+      prettierd # JS/TS/HTML/CSS formatter daemon (faster prettier)
     ])
     # herdr isn't in nixpkgs proper yet, so it can't just go in the list
     # above -- it comes from the herdr-nix flake input instead (see flake.nix),
     # which wraps herdr's official prebuilt per-platform release binaries.
     ++ [herdr-nix.packages.${pkgs.system}.default];
   fonts.fontconfig.enable = true;
-  home.sessionVariables.EDITOR = "nvim";
 
+  home.sessionVariables = {
+    EDITOR = "nvim";
+  };
   # home.nix
   programs.direnv = {
     enable = true;
@@ -113,19 +116,26 @@ in {
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
-    # Inject fd as the default engine so .DS_Store and gitignored files are skipped
-    # additional options like "--exclude .git --exclude node_modules --exclude .DS_Store" are applied already by fd configuration
+
+    # 1. Main engines
     defaultCommand = "fd --type f --strip-cwd-prefix --hidden";
+    fileWidgetCommand = "fd --type f --strip-cwd-prefix --hidden"; # Fixes Ctrl+T
+    changeDirWidgetCommand = "fd --type d --strip-cwd-prefix --hidden"; # Fixes Alt+C
 
+    # 2. Shared design layout
     defaultOptions = [
-      "--layout=reverse" # Puts the search bar at the top (matches terminal flow)
-      "--border=rounded" # Adds clean, modern borders to panels
-      "--margin=3"
-      "--height=82%"
-      "--info=inline" # Keeps match counters clean and compact
+      "--layout=reverse"
+      "--border=rounded"
+      "--margin=1,3"
+      "--height=85%"
+      "--info=inline"
+      "--color=16,bg:-1,bg+:-1,fg+:white,hl:green,hl+:green,pointer:blue,prompt:blue,marker:green"
+    ];
 
-      # Custom color themes mapping to eza's muted blue/green/gray terminal colors
-      "--color=18,bg+:-1,fg+:#ffffff,hl:#98c379,hl+:#98c379,pointer:#61afef,prompt:#61afef,marker:#98c379"
+    # 3. Widget-specific tweaks
+    historyWidgetOptions = [
+      "--sort" # Keeps your command history in chronological order
+      "--exact" # Often preferred for history so you don't get wild fuzzy matches
     ];
   };
 

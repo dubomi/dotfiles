@@ -16,3 +16,24 @@ o.termguicolors = true -- Enable 24-bit true color
 o.background = "dark" -- Set background preference (dark or light)
 o.spell = true -- enable spelling checker
 o.spelllang = "en_us" -- set en_us as a spelling checker language
+
+-- Auto-reload files changed outside nvim
+o.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+  command = "checktime",
+})
+
+-- Highlight yanked text
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
+  pattern = "*",
+  desc = "Highlight selection on yank",
+  callback = function()
+    vim.hl.on_yank({ timeout = 200, on_visual = true })
+  end,
+})
+
+-- auto resize splits when the terminal's window is resized
+vim.api.nvim_create_autocmd("VimResized", {
+  command = "wincmd =",
+})
